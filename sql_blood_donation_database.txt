@@ -1,0 +1,116 @@
+CREATE TABLE patient (
+    patient_id INT PRIMARY KEY,
+    patient_name VARCHAR(40),
+    patient_blood_group VARCHAR(40),
+    patient_disease VARCHAR (40)
+);
+
+
+INSERT INTO patient VALUES (12345, 'Michael Peter', 'A+', 'Sickle Cell');
+INSERT INTO patient VALUES (83759, 'Jacob Brown', 'O+', 'Hemophilia');
+INSERT INTO patient VALUES (75693, 'Richard Manson', 'B+', 'Thalassemia');
+INSERT INTO patient VALUES (76428, 'Josh Foreman', 'A-', 'Von Willebrand');
+INSERT INTO patient VALUES (46573, 'Jack Schneider', 'AB-', 'Hereditary Hemorrhagic Telangiectasia');
+
+UPDATE patient
+SET patient_disease = 'Sickle Cell'
+WHERE patient_id = 12345;
+
+SELECT *
+FROM patient;
+
+CREATE TABLE donors (
+    donor_id INT PRIMARY KEY,
+    donor_name VARCHAR(40),
+    donor_blood_group VARCHAR(40),
+    donor_medical_report VARCHAR (40),
+    donor_contact_number INT,
+    donor_address VARCHAR (40)
+);
+
+INSERT INTO donors VALUES (34349, 'Blake Moore', 'O+', 'Vision problems', 585962812, 'St. Peters Valley' );
+INSERT INTO donors VALUES (83241, 'Eric Willis', 'AB-', 'Vision problems', 585962812, 'St. Peters Valley' );
+INSERT INTO donors VALUES (78293, 'Jane Phillips', 'B+', 'Fatigue', 640302234, 'George Town' );
+INSERT INTO donors VALUES (54628, 'Gabriel Davis', 'A-', 'Large bruises', 857746234, 'Hawk Lane' );
+INSERT INTO donors VALUES (48590, 'Jacob Anderson', 'AB-', 'Headaches', 374859698, 'West Street' );
+
+UPDATE donors 
+SET donor_blood_group = 'A+'
+WHERE donor_name = 'Blake Moore';
+
+UPDATE donors 
+SET donor_address =  'Beverley Hills'
+WHERE donor_name = 'Eric Willis';
+
+UPDATE donors
+SET donor_contact_number = 639271359
+WHERE donor_name = 'Eric Willis';
+
+UPDATE donors 
+SET  donor_medical_report ='Bleeding into the joints.'
+WHERE donor_name = 'Eric Willis';
+
+UPDATE donors
+SET donor_blood_group = 'O+'
+WHERE donor_name = 'Eric Willis';
+
+SELECT * FROM donors;
+
+CREATE TABLE blood_bank (
+    blood_bank_name VARCHAR (40) PRIMARY KEY,
+    donor_id INT,
+    blood_bank_address VARCHAR (40),
+    blood_bank_contact_number INT,
+    FOREIGN KEY (donor_id) REFERENCES donors (donor_id) ON DELETE SET NULL
+);
+
+INSERT INTO blood_bank VALUES ('LifeSouth Community Blood Centers', 34349, 'Newberry Road', '829176541');
+INSERT INTO blood_bank VALUES ('Blood Bank of Alaska', 83241, 'Airport Heights Anchorage', '373465834');
+INSERT INTO blood_bank VALUES ('LifeStream Blood Bank', 78293, 'San Bernardino', '836484827');
+INSERT INTO blood_bank VALUES ('SunCoast Blood Centers', 54628, 'Sarasota', '485742352');
+INSERT INTO blood_bank VALUES ('South Bend Medical Foundation', 48590, 'Lafayette Blvd', '697643764');
+
+SELECT *
+FROM blood_bank;
+
+CREATE TABLE donation_record (
+    donation_id INT PRIMARY KEY,
+    donor_id INT,
+    donation_time TIME,
+    donation_place VARCHAR (40),
+    amount_donated INT,
+    FOREIGN KEY (donor_id) REFERENCES donors (donor_id) ON DELETE CASCADE
+
+);
+
+DROP TABLE donation_record;
+
+INSERT INTO donation_record VALUES (112, 34349, 02-32-11, 'Main Street', 437);
+INSERT INTO donation_record VALUES (738, 83241, 04-01-42, 'Holly Avenue',321);
+INSERT INTO donation_record VALUES (837, 78293, 01-03-34, 'Green Garden', 345);
+INSERT INTO donation_record VALUES (829, 54628, 07-04-24, 'Johnson Drive', 500);
+INSERT INTO donation_record VALUES (232, 48590, 02-22-19, 'Ottawa Road',234);
+
+CREATE TABLE acceptance_record (
+    patient_id INT,
+    acceptance_time TIME,
+    acceptance_place VARCHAR (40),
+    amount_accepted INT,
+    donor_id INT,
+    FOREIGN KEY (patient_id) REFERENCES patient (patient_id) ON DELETE SET NULL,
+    FOREIGN KEY (donor_id) REFERENCES donors (donor_id) ON DELETE SET NULL
+);
+
+
+INSERT INTO acceptance_record VALUES (12345, 05-23-34, 'Daisy Street', 401,34349);
+INSERT INTO acceptance_record VALUES (83759, 08-12-23, 'Fieldsburn Avenue', 290, 83241);
+INSERT INTO acceptance_record VALUES (75693, 03-23-59, 'Jacksonville Area', 305, 78293);
+INSERT INTO acceptance_record VALUES (76428, 09-23-24, 'Markston Drive', 440, 54628);
+INSERT INTO acceptance_record VALUES (46573, 04-32-16, 'Mitch Valley', 200, 48590 );
+
+SELECT *
+FROM acceptance_record;
+
+SELECT *
+FROM patient
+WHERE patient_blood_group LIKE '%A%';
